@@ -1,23 +1,45 @@
-from datetime import datetime
 from flask_smorest import Blueprint, abort
 from flask.views import MethodView
-from flask_jwt_extended import create_access_token, get_jwt, jwt_required
-from blocklist import BLOCKLIST
+from flask_jwt_extended import jwt_required
 
 from db import db
-from models import M
-from schemas import UserSchema
-
-from passlib.hash import pbkdf2_sha256
+from models import MeasurementModel
+from schemas import MeasurementSchema
 
 bp = Blueprint('Measurement', __name__)
 
 
-@bp.route('/measurements')
+@bp.route('/measurements/<int:device_id>')
 class MeasurementView(MethodView):
     @jwt_required()
-    def get(self):
-        jti = get_jwt()["sub"]
+    def get(self, device_id):
+        measurements = MeasurementModel.query.filter_by(device_id=device_id).all()
+
+        if not measurements:
+            abort(404)
+
+        measurement_schema = MeasurementSchema(many=True)
+        return measurement_schema.dump(measurements)
 
 
+@bp.route('/measurements', methods=['POST'])
+class MeasurementCreateView(MethodView):
+    @jwt_required()
+    @bp.arguments(MeasurementSchema)
+    def post(self, measurement):
+        measurement = MeasurementModel(**measurement)
+        db.session.add(measurement)
+        db.session.commit()
+        return measurement
 
+
+@bp.route('/measurements/<int:measurement_id>')
+class MeasurementByIdView(MethodView):
+    @jwt_required()
+    def get(self, measurement_id):
+        measurement = MeasurementModel.query.filter_by(id=measurement_id).first()
+        if not measurement:
+            abort(404)
+
+        measurement_schema = MeasurementSchema()
+        return measurement_schema.dump(measurement)

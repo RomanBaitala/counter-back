@@ -7,10 +7,7 @@ from db import db
 import mysql.connector
 import models
 
-from resources.user import bp as UserBlueprint
-from resources.device import bp as DeviceBlueprint
-from resources.wifi import bp as WifiBlueprint
-
+from resources import register_routes
 
 jwt = JWTManager()
 
@@ -48,7 +45,6 @@ def create_tables(app):
         db.create_all()
 
 
-# def create_app():
 app = Flask(__name__)
 app.config["API_TITLE"] = "Stores REST API"
 app.config["API_VERSION"] = "v1"
@@ -64,14 +60,9 @@ app.config[
     ] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
 db.init_app(app)
 jwt.init_app(app)
+
 api = Api(app)
-api.register_blueprint(UserBlueprint)
-api.register_blueprint(DeviceBlueprint)
-api.register_blueprint(WifiBlueprint)
+register_routes(api)
 
 create_database()
 create_tables(app)
-
-
-# if __name__ == "__main__":
-#     create_app()
