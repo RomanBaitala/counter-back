@@ -35,3 +35,23 @@ class AddWiFi(MethodView):
         db.session.add(wifi)
         db.session.commit()
         return {"message": "Wifi created successfully."}, 201
+
+
+@bp.route('/wifi/<int:device_id>', methods=['PUT'])
+class UpdateWiFi(MethodView):
+    @jwt_required()
+    @bp.arguments(WifiSchema)
+    def put(self, device_id, wifi_data):
+        wifi = WiFiModel.query.filter_by(device_id=device_id).first()
+
+        if wifi is None:
+            abort(404, message='WiFi does not exist')
+
+        if 'ssid' in wifi_data:
+            wifi.ssid = wifi_data['ssid']
+        if 'password' in wifi_data:
+            wifi.password = wifi_data['password']
+
+        db.session.commit()
+
+        return {"message": "Wifi updated successfully."}, 200

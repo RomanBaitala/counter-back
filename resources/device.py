@@ -35,3 +35,25 @@ class AddDevice(MethodView):
         db.session.add(device)
         db.session.commit()
         return {"message": "Device created successfully."}, 201
+
+
+@bp.route('/device/<int:id>')
+class DeviceUpdate(MethodView):
+    @jwt_required()
+    @bp.arguments(DeviceSchema)
+    def put(self, device_data, id):
+        user_id = get_jwt()["sub"]
+
+        device = DeviceModel.query.filter_by(id=id, user_id=int(user_id)).first()
+
+        if not device:
+            abort(404, message="Device not found or you do not have access.")
+
+        if 'battery_capacity' in device_data:
+            device.battery_capacity = device_data['battery_capacity']
+        if 'frequency_update' in device_data:
+            device.frequency_update = device_data['frequency_update']
+
+        db.session.commit()
+
+        return {"message": "Device updated successfully."}, 200
