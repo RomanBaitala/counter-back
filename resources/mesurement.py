@@ -43,3 +43,15 @@ class MeasurementByIdView(MethodView):
 
         measurement_schema = MeasurementSchema()
         return measurement_schema.dump(measurement)
+
+
+@bp.route('/measurements/<int:measurement_id>', methods=['PUT'])
+class MeasurementUpdateView(MethodView):
+    @jwt_required()
+    @bp.arguments(MeasurementSchema)
+    def put(self, measurement_id):
+        measurement = MeasurementModel.query.filter_by(id=measurement_id).first()
+        if not measurement:
+            abort(404)
+
+

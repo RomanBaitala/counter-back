@@ -34,7 +34,7 @@ class AddDevice(MethodView):
 
         db.session.add(device)
         db.session.commit()
-        return {"message": "Device created successfully."}, 201
+        return {"data": device}, 201
 
 
 @bp.route('/device/<int:id>')
