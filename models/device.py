@@ -14,3 +14,13 @@ class DeviceModel(db.Model):
 
     # measurements = db.relationship('MeasurementModel', backref='device', lazy=True)
 
+    def put_into_dto(self):
+        return {
+            'id': self.id,
+            'battery_capacity': self.battery_capacity,
+            'frequency_update': self.frequency_update,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'user_id': self.user_id
+        }
+
+

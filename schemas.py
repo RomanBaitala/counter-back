@@ -27,6 +27,7 @@ class MeasurementSchema(Schema):
     measurement_value = fields.Float(required=True)
     created_at = fields.DateTime(dump_only=True)
     device_id = fields.Integer(required=True)
+    image_link = fields.Str(required=True)
 
 
 class UserSchemaNested(UserSchema):

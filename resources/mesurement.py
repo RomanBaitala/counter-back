@@ -24,13 +24,12 @@ class MeasurementView(MethodView):
 
 @bp.route('/measurements', methods=['POST'])
 class MeasurementCreateView(MethodView):
-    @jwt_required()
     @bp.arguments(MeasurementSchema)
     def post(self, measurement):
         measurement = MeasurementModel(**measurement)
         db.session.add(measurement)
         db.session.commit()
-        return measurement
+        return {"message": "Measurement added successfully."}, 201
 
 
 @bp.route('/measurements/<int:measurement_id>')
