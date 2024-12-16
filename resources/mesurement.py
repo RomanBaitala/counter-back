@@ -26,6 +26,7 @@ class MeasurementView(MethodView):
 class MeasurementCreateView(MethodView):
     @bp.arguments(MeasurementSchema)
     def post(self, measurement):
+        print(measurement)
         measurement = MeasurementModel(**measurement)
         db.session.add(measurement)
         db.session.commit()
