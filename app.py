@@ -65,8 +65,10 @@ db.init_app(app)
 jwt.init_app(app)
 
 api = Api(app)
+with app.app_context():
+    db.create_all()
 register_routes(api)
 
 # create_database()
-create_tables(app)
+# create_tables(app)
 
