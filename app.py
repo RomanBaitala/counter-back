@@ -45,31 +45,28 @@ def create_tables(app):
         db.create_all()
 
 
-def create_app():
-    app = Flask(__name__)
-    app.config["API_TITLE"] = "Counter REST API"
-    app.config["API_VERSION"] = "v1"
-    app.config["OPENAPI_VERSION"] = "3.0.3"
-    app.config['JWT_SECRET_KEY'] = 'SUPER_SECRET_KEY'
-    app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql://root:root@127.0.0.1:3306/counter'
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    app.config["PROPAGATE_EXCEPTIONS"] = True
-    app.config["OPENAPI_URL_PREFIX"] = "/"
-    app.config["OPENAPI_SWAGGER_UI_PATH"] = "/swagger-ui"
-    app.config[
-            "OPENAPI_SWAGGER_UI_URL"
-        ] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
-    db.init_app(app)
-    jwt.init_app(app)
-
-    api = Api(app)
-    register_routes(api)
-
-    create_database()
-    create_tables(app)
-    return app
 
 
-if __name__ == "__main__":
-    app = create_app()
-    app.run(host='0.0.0.0', port=5000)
+app = Flask(__name__)
+app.config["API_TITLE"] = "Counter REST API"
+app.config["API_VERSION"] = "v1"
+app.config["OPENAPI_VERSION"] = "3.0.3"
+app.config['JWT_SECRET_KEY'] = 'SUPER_SECRET_KEY'
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
+    # 'mysql://root:root@127.0.0.1:3306/counter'
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["PROPAGATE_EXCEPTIONS"] = True
+app.config["OPENAPI_URL_PREFIX"] = "/"
+app.config["OPENAPI_SWAGGER_UI_PATH"] = "/swagger-ui"
+app.config[
+        "OPENAPI_SWAGGER_UI_URL"
+    ] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
+db.init_app(app)
+jwt.init_app(app)
+
+api = Api(app)
+register_routes(api)
+
+# create_database()
+create_tables(app)
+
