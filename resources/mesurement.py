@@ -33,7 +33,7 @@ class MeasurementCreateView(MethodView):
         return {"message": "Measurement added successfully."}, 201
 
 
-@bp.route('/measurements/<int:measurement_id>')
+@bp.route('/measurement/<int:measurement_id>')
 class MeasurementByIdView(MethodView):
     @jwt_required()
     def get(self, measurement_id):
